@@ -44,8 +44,26 @@ const splashTexts = [
   "🤑🤑🤑🤑🤑",
   "GAMBLING GAMBLING! GOONING GOONING!",
 ];
+
+const secretSplashTexts = [
+  "Porque no pruebas el nombre: GOON1?",
+  "Porque no pruebas el nombre: GOON2?",
+  "Porque no pruebas el nombre: DICE?",
+  "Porque no pruebas el nombre: OHYEAH?",
+  "Porque no pruebas el nombre: BOSSMAN?",
+  "Porque no pruebas el nombre: GAMBLER?",
+  "Porque no pruebas el nombre: PLACEHOLDER?",
+];
+
+// Probabilidad de mostrar una pista secreta: 10 %
+const showSecretHint = Math.random() < 0.1;
+
+const splashPool = showSecretHint
+  ? secretSplashTexts
+  : splashTexts;
+
 document.getElementById('splash-text').textContent =
-  splashTexts[Math.floor(Math.random() * splashTexts.length)];
+  splashPool[Math.floor(Math.random() * splashPool.length)];
 
 /* ==============================
    RELLENAR SELECTORES
