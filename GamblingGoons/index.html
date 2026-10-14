@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gambling Goons: Casino Night</title>
   <link rel="stylesheet" href="/src/style.css">
+  <link rel="icon" type="image/png" href="/GamblingGoonsIcon2.png" />
 </head>
 
 <body>
@@ -91,11 +92,31 @@
         <button id="start-game-button" class="primary-button">
           ENTRAR AL CASINO
         </button>
+      </div><!-- Fin de customization-actions -->
+
+    </div><!-- Fin de customization-content -->
+  </div><!-- Fin de customization-screen -->
+
+  <!-- DIÁLOGOS DE LA CINEMÁTICA -->
+  <div id="intro-dialogue" class="dialogue-hidden" aria-live="polite">
+    <div class="dialogue-box">
+      <div class="dialogue-header">
+        <span id="dialogue-speaker">CAPO</span>
       </div>
 
-      <!-- THREE.JS INSERTARÁ AQUÍ EL CANVAS -->
+      <div class="dialogue-content">
+        <p id="dialogue-text"></p>
+      </div>
 
-      <script type="module" src="/src/main.js"></script>
+      <div class="dialogue-footer">
+        <span>ESPACIO / CLIC PARA CONTINUAR</span>
+        <span class="dialogue-arrow">▼</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LÓGICA PRINCIPAL DEL JUEGO -->
+  <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>

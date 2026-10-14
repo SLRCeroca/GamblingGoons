@@ -1,4 +1,3 @@
-
 import * as THREE from 'three';
 
 export class SplitScreen {
@@ -12,19 +11,18 @@ export class SplitScreen {
         this.camera2 = this.createCamera();
 
         this.cameraOffset = new THREE.Vector3(6, 8, 6);
+        this.renderSolo = false;
 
         this.resize();
     }
 
     createCamera() {
-        const camera = new THREE.PerspectiveCamera(
+        return new THREE.PerspectiveCamera(
             50,
             1,
             0.1,
             1000
         );
-
-        return camera;
     }
 
     updateCamera(camera, player) {
@@ -39,55 +37,61 @@ export class SplitScreen {
     resize() {
         const width = window.innerWidth;
         const height = window.innerHeight;
-        const leftWidth = Math.floor(width / 2);
-        const rightWidth = width - leftWidth;
+
+        this.width = width;
+        this.height = height;
+        this.leftWidth = Math.floor(width / 2);
+        this.rightWidth = width - this.leftWidth;
 
         this.renderer.setSize(width, height, false);
 
-        this.camera1.aspect = leftWidth / height;
+        this.camera1.aspect = this.renderSolo
+            ? width / height
+            : this.leftWidth / height;
+
         this.camera1.updateProjectionMatrix();
 
-        this.camera2.aspect = rightWidth / height;
+        this.camera2.aspect = this.rightWidth / height;
         this.camera2.updateProjectionMatrix();
     }
 
     render() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        const leftWidth = Math.floor(width / 2);
-        const rightWidth = width - leftWidth;
+        const width = this.width;
+        const height = this.height;
 
         this.updateCamera(this.camera1, this.player1);
-        this.updateCamera(this.camera2, this.player2);
+
         if (this.renderSolo) {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-
-            this.camera1.aspect = width / height;
-            this.camera1.updateProjectionMatrix();
-
             this.renderer.setScissorTest(false);
             this.renderer.setViewport(0, 0, width, height);
-            this.renderer.clear();
+            this.renderer.clear(true, true, true);
             this.renderer.render(this.scene, this.camera1);
-
             return;
         }
+
+        this.updateCamera(this.camera2, this.player2);
+
         this.renderer.setScissorTest(true);
 
         // Mitad izquierda: jugador 1
-        this.renderer.setViewport(0, 0, leftWidth, height);
-        this.renderer.setScissor(0, 0, leftWidth, height);
+        this.renderer.setViewport(0, 0, this.leftWidth, height);
+        this.renderer.setScissor(0, 0, this.leftWidth, height);
         this.renderer.clear(true, true, true);
         this.renderer.render(this.scene, this.camera1);
 
         // Mitad derecha: jugador 2
         this.renderer.setViewport(
-            leftWidth, 0, rightWidth, height
+            this.leftWidth,
+            0,
+            this.rightWidth,
+            height
         );
 
         this.renderer.setScissor(
-            leftWidth, 0, rightWidth, height
+            this.leftWidth,
+            0,
+            this.rightWidth,
+            height
         );
 
         this.renderer.clear(true, true, true);
