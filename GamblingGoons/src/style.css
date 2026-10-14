@@ -1,22 +1,684 @@
+/* ==============================
+   CONFIGURACIÓN GENERAL
+================================ */
 
 * {
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html,
 body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #101014;
 }
 
 body {
-    background: #202630;
+  position: relative;
 }
 
+/* Canvas de Three.js */
+
 canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==============================
+   MENÚ PRINCIPAL
+================================ */
+
+#main-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background:
+    radial-gradient(ellipse at center,
+      rgba(90, 15, 25, 0.35) 0%,
+      transparent 65%),
+    linear-gradient(135deg,
+      #17131b 0%,
+      #08080d 100%);
+
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s ease;
+}
+
+/* Luces decorativas del casino */
+
+#main-menu::before,
+#main-menu::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+#main-menu::before {
+  background: #ff2525;
+  top: -100px;
+  left: -80px;
+}
+
+#main-menu::after {
+  background: #ffcc33;
+  bottom: -120px;
+  right: -80px;
+}
+
+/* Contenido central */
+
+.menu-content {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
+}
+
+.game-subtitle {
+  margin-bottom: 25px;
+  color: #ffe4a3;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 5px;
+
+  text-shadow:
+    0 0 4px rgba(255, 220, 140, 0.35),
+    0 0 9px rgba(255, 190, 80, 0.2);
+}
+
+
+/* GAMBLING */
+
+.game-title {
+  color: #fff8f0;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  font-weight: 1000;
+  line-height: 0.95;
+  letter-spacing: -4px;
+
+  text-shadow:
+    0 0 2px #ffffff,
+    0 0 6px rgba(255, 255, 255, 0.65),
+    0 0 14px rgba(255, 70, 80, 0.5),
+    0 0 28px rgba(255, 30, 50, 0.3);
+
+  animation: neon-white 3s ease-in-out infinite alternate;
+}
+
+/* GOONS */
+
+.game-title span {
+  display: block;
+  color: #ff354b;
+  margin-top: 12px;
+
+  text-shadow:
+    0 0 2px #ffffff,
+    0 0 5px rgba(255, 176, 184, 0.6),
+    0 0 12px rgba(255, 38, 63, 0.7),
+    0 0 25px rgba(255, 16, 45, 0.4);
+
+  animation: neon-red 2.5s ease-in-out infinite alternate;
+}
+
+
+/* CASINO NIGHT — NEÓN AZUL */
+
+.game-title .game-edition {
+  display: block;
+  margin-top: 18px;
+
+  color: #70d9ff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 5px;
+  line-height: 1.2;
+
+  text-shadow:
+    0 0 2px #ffffff,
+    0 0 5px rgba(112, 217, 255, 0.7),
+    0 0 12px rgba(40, 160, 255, 0.5),
+    0 0 22px rgba(0, 110, 255, 0.3);
+
+  animation: neon-blue 3s ease-in-out infinite alternate;
+}
+
+/* ANIMACIONES SUTILES */
+
+@keyframes neon-white {
+  from {
+    text-shadow:
+      0 0 2px #ffffff,
+      0 0 6px rgba(255, 255, 255, 0.6),
+      0 0 14px rgba(255, 70, 80, 0.4),
+      0 0 25px rgba(255, 30, 50, 0.25);
+  }
+
+  to {
+    text-shadow:
+      0 0 3px #ffffff,
+      0 0 8px rgba(255, 255, 255, 0.75),
+      0 0 18px rgba(255, 70, 80, 0.5),
+      0 0 32px rgba(255, 30, 50, 0.35);
+  }
+}
+
+@keyframes neon-red {
+  from {
+    text-shadow:
+      0 0 2px #ffffff,
+      0 0 5px rgba(255, 176, 184, 0.5),
+      0 0 10px rgba(255, 38, 63, 0.6),
+      0 0 20px rgba(255, 16, 45, 0.3);
+  }
+
+  to {
+    text-shadow:
+      0 0 3px #ffffff,
+      0 0 7px rgba(255, 176, 184, 0.7),
+      0 0 14px rgba(255, 38, 63, 0.75),
+      0 0 26px rgba(255, 16, 45, 0.4);
+  }
+}
+
+@keyframes neon-blue {
+  from {
+    text-shadow:
+      0 0 2px #ffffff,
+      0 0 5px rgba(112, 217, 255, 0.6),
+      0 0 10px rgba(40, 160, 255, 0.4),
+      0 0 18px rgba(0, 110, 255, 0.2);
+  }
+
+  to {
+    text-shadow:
+      0 0 3px #ffffff,
+      0 0 7px rgba(112, 217, 255, 0.75),
+      0 0 14px rgba(40, 160, 255, 0.55),
+      0 0 24px rgba(0, 110, 255, 0.3);
+  }
+}
+
+/* ==============================
+   FRASE ALEATORIA
+================================ */
+
+#splash-text {
+  min-height: 30px;
+  margin-top: 35px;
+  margin-bottom: 35px;
+
+  color: #ffff55;
+  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  font-weight: 900;
+
+  text-shadow: 2px 2px 0 #302b16;
+
+  transform: rotate(-8deg);
+  animation: splash-pulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes splash-pulse {
+  from {
+    transform: rotate(-8deg) scale(1);
+  }
+
+  to {
+    transform: rotate(-8deg) scale(1.08);
+  }
+}
+
+/* ==============================
+   BOTÓN PLAY
+================================ */
+
+#play-button {
+  width: 260px;
+  max-width: 90%;
+  padding: 18px 30px;
+
+  border: 3px solid #f5d98c;
+  border-radius: 4px;
+
+  background: #b8202c;
+  color: white;
+
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 0 #64121a,
+    0 10px 25px rgba(0, 0, 0, 0.5);
+
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+#play-button:hover {
+  background: #e52e3a;
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 9px 0 #64121a,
+    0 14px 30px rgba(232, 59, 66, 0.2);
+}
+
+#play-button:active {
+  transform: translateY(4px);
+
+  box-shadow:
+    0 2px 0 #64121a,
+    0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* ==============================
+   TEXTO INFERIOR
+================================ */
+
+.menu-footer {
+  margin-top: 45px;
+
+  color: #77717b;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+/* ==============================
+   TRANSICIÓN AL JUEGO
+================================ */
+
+#main-menu.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ==============================
+   ADAPTACIÓN A MÓVILES
+================================ */
+
+@media (max-width: 480px) {
+  .game-title {
+    letter-spacing: -2px;
+  }
+
+  .game-subtitle {
+    letter-spacing: 3px;
+  }
+
+  #play-button {
+    width: 220px;
+  }
+
+  .menu-footer {
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+  }
+}
+
+/* =====================================
+   PANTALLA DE PERSONALIZACIÓN
+===================================== */
+
+#customization-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow-y: auto;
+    padding: 30px 20px;
+
+    background:
+        radial-gradient(
+            circle at 15% 50%,
+            rgba(255, 35, 65, 0.12),
+            transparent 40%
+        ),
+        radial-gradient(
+            circle at 85% 50%,
+            rgba(40, 130, 255, 0.12),
+            transparent 40%
+        ),
+        linear-gradient(135deg, #17131b, #08080d);
+}
+
+#customization-screen.screen-hidden {
+    display: none;
+}
+
+.customization-content {
+    width: 100%;
+    max-width: 850px;
+    margin: auto;
+    text-align: center;
+}
+
+.customization-content .game-subtitle {
+    margin-bottom: 15px;
+    font-size: 0.75rem;
+}
+
+.customization-title {
+    color: #fff8f0;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(255, 50, 70, 0.3);
+}
+
+.customization-description {
+    margin: 12px auto 28px;
+    color: #c4bdcc;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Tarjetas de los personajes */
+
+.goon-panels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    text-align: left;
+}
+
+.goon-panel {
+    min-width: 0;
+    padding: 24px;
+
+    background: rgba(13, 12, 19, 0.95);
+    border: 1px solid #48414f;
+    border-radius: 8px;
+}
+
+.goon-red {
+    border-color: rgba(255, 53, 75, 0.75);
+    box-shadow: 0 0 18px rgba(255, 53, 75, 0.08);
+}
+
+.goon-blue {
+    border-color: rgba(70, 170, 255, 0.75);
+    box-shadow: 0 0 18px rgba(70, 170, 255, 0.08);
+}
+
+.goon-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 15px;
+
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+
+.goon-icon-red {
+    color: #ff5368;
+    background: rgba(255, 53, 75, 0.12);
+    border: 2px solid #ff354b;
+}
+
+.goon-icon-blue {
+    color: #70d9ff;
+    background: rgba(70, 170, 255, 0.12);
+    border: 2px solid #46aaff;
+}
+
+.goon-panel h3 {
+    color: #ffffff;
+    text-align: center;
+    font-size: 1.25rem;
+    letter-spacing: 3px;
+}
+
+.goon-color-label {
+    margin: 7px 0 24px;
+    color: #aaa3b1;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.goon-panel label {
+    display: block;
+    margin: 18px 0 9px;
+
+    color: #e4dce8;
+    font-size: 0.78rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* Cajas de texto y selectores */
+
+.goon-panel input,
+.goon-panel select {
     display: block;
     width: 100%;
-    height: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 12px;
+
+    appearance: auto;
+    border: 1px solid #514957;
+    border-radius: 5px;
+    outline: none;
+
+    background-color: #191620;
+    color: #ffffff;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.4;
+
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.goon-panel input::placeholder {
+    color: #a49baa;
+    opacity: 1;
+}
+
+.goon-panel select option {
+    background: #191620;
+    color: #ffffff;
+}
+
+.goon-red input:focus,
+.goon-red select:focus {
+    border-color: #ff5368;
+    box-shadow: 0 0 10px rgba(255, 53, 75, 0.2);
+}
+
+.goon-blue input:focus,
+.goon-blue select:focus {
+    border-color: #70d9ff;
+    box-shadow: 0 0 10px rgba(70, 170, 255, 0.2);
+}
+
+/* Mensajes de validación */
+
+#customization-error {
+    min-height: 22px;
+    margin-top: 16px;
+    color: #ff7886;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+/* Botones de personalización */
+
+.customization-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.customization-actions button {
+    min-width: 175px;
+    min-height: 50px;
+    padding: 13px 22px;
+
+    border-radius: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.primary-button {
+    color: #ffffff;
+    background: #b8202c;
+    border: 2px solid #f5d98c;
+    box-shadow: 0 4px 0 #64121a;
+}
+
+.primary-button:hover:not(:disabled) {
+    background: #e52e3a;
+    transform: translateY(-2px);
+}
+
+.secondary-button {
+    color: #eee8f2;
+    background: #27222e;
+    border: 1px solid #655b6c;
+}
+
+.secondary-button:hover {
+    background: #393140;
+    transform: translateY(-2px);
+}
+
+.customization-actions button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
+}
+
+#customization-screen .menu-footer {
+    margin-top: 28px;
+    line-height: 1.7;
+}
+
+/* Adaptación a pantallas pequeñas */
+
+@media (max-width: 600px) {
+    #customization-screen {
+        align-items: flex-start;
+        padding: 28px 16px;
+    }
+
+    .goon-panels {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    .goon-panel {
+        padding: 20px;
+    }
+
+    .customization-actions {
+        flex-direction: column-reverse;
+        gap: 14px;
+    }
+
+    .customization-actions button {
+        width: 100%;
+    }
+}
+
+/* Botón de juego en solitario */
+
+.solo-button {
+    min-width: 175px;
+    min-height: 50px;
+    padding: 13px 22px;
+
+    color: #8bdcff;
+    background: #142331;
+    border: 2px solid #46aaff;
+    border-radius: 5px;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.solo-button:hover:not(:disabled) {
+    background: #203b52;
+    transform: translateY(-2px);
+}
+
+.solo-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* Espacio para los tres botones */
+
+.customization-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.customization-actions button {
+    min-width: 160px;
+}
+
+@media (max-width: 600px) {
+    .customization-actions {
+        flex-direction: column-reverse;
+    }
+
+    .customization-actions button {
+        width: 100%;
+    }
 }

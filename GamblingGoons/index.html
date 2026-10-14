@@ -1,12 +1,101 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gambling Goons: Casino Night</title>
-    <link rel="stylesheet" href="/src/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gambling Goons: Casino Night</title>
+  <link rel="stylesheet" href="/src/style.css">
 </head>
+
 <body>
-    <script type="module" src="/src/main.js"></script>
+
+  <!-- MENÚ PRINCIPAL -->
+  <div id="main-menu">
+    <div class="menu-content">
+      <p class="game-subtitle">D. EVIL CASINO PRESENTS</p>
+
+      <h1 class="game-title">
+        GAMBLING
+        <span>GOONS</span>
+        <span class="game-edition">Casino Night</span>
+      </h1>
+
+      <p id="splash-text"></p>
+
+      <button id="play-button">JUGAR</button>
+
+      <p class="menu-footer">
+        DOS GOONS. UNA CARTERA. CERO NEURONAS.
+      </p>
+    </div>
+  </div>
+
+  <!-- PERSONALIZACIÓN -->
+  <div id="customization-screen" class="screen-hidden">
+    <div class="customization-content">
+
+      <p class="game-subtitle">ANTES DE EMPEZAR</p>
+      <h2 class="customization-title">MEET YOUR GOONS!</h2>
+      <p class="customization-description">
+        Elige un nombre y pronombres para cada personaje,
+      </p>
+
+      <div class="goon-panels">
+
+        <!-- GOON 1 -->
+        <section class="goon-panel goon-red">
+          <div class="goon-icon goon-icon-red">
+            <span>1</span>
+          </div>
+
+          <h3>GOON 1</h3>
+          <p class="goon-color-label">ROJO</p>
+
+          <label for="goon1-name">NOMBRE</label>
+          <input id="goon1-name" type="text" maxlength="20" placeholder="Enter a name" autocomplete="off">
+
+          <label for="goon1-pronouns">PRONOMBRES</label>
+          <select id="goon1-pronouns"></select>
+        </section>
+
+        <!-- GOON 2 -->
+        <section class="goon-panel goon-blue">
+          <div class="goon-icon goon-icon-blue">
+            <span>2</span>
+          </div>
+
+          <h3>GOON 2</h3>
+          <p class="goon-color-label">NEGRO</p>
+
+          <label for="goon2-name">NOMBRE</label>
+          <input id="goon2-name" type="text" maxlength="20" placeholder="Enter a name" autocomplete="off">
+
+          <label for="goon2-pronouns">PRONOMBRES</label>
+          <select id="goon2-pronouns"></select>
+        </section>
+
+      </div>
+
+      <p id="customization-error" role="alert"></p>
+
+      <div class="customization-actions">
+        <button id="back-button" class="secondary-button">
+          VOLVER
+        </button>
+
+        <button id="solo-button" class="solo-button">
+          JUGAR EN SOLITARIO
+        </button>
+
+        <button id="start-game-button" class="primary-button">
+          ENTRAR AL CASINO
+        </button>
+      </div>
+
+      <!-- THREE.JS INSERTARÁ AQUÍ EL CANVAS -->
+
+      <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>

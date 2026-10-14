@@ -59,7 +59,20 @@ export class SplitScreen {
 
         this.updateCamera(this.camera1, this.player1);
         this.updateCamera(this.camera2, this.player2);
+        if (this.renderSolo) {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
 
+            this.camera1.aspect = width / height;
+            this.camera1.updateProjectionMatrix();
+
+            this.renderer.setScissorTest(false);
+            this.renderer.setViewport(0, 0, width, height);
+            this.renderer.clear();
+            this.renderer.render(this.scene, this.camera1);
+
+            return;
+        }
         this.renderer.setScissorTest(true);
 
         // Mitad izquierda: jugador 1
