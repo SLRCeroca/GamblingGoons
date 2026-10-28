@@ -5,6 +5,9 @@ import { Player1 } from './players/Player1.js';
 import { SplitScreen } from './camera/SplitScreen.js';
 import { getSecretSkin } from './players/SecretSkins.js';
 import { IntroSequence } from './cutscenes/IntroSequence.js';
+import { NPCManager } from './npcs/NPCManager.js';
+import { NPCSpawner } from './npcs/NPCSpawner.js';
+
 
 /* ==============================
    PRONOMBRES DISPONIBLES
@@ -138,7 +141,9 @@ const player1 = new Player1(
     forward: 'w',
     backward: 's',
     left: 'a',
-    right: 'd'
+    right: 'd',
+    confirm: 'e',
+    cancel: 'q'
   }
 );
 
@@ -150,13 +155,16 @@ const player2 = new Player1(
     forward: 'arrowup',
     backward: 'arrowdown',
     left: 'arrowleft',
-    right: 'arrowright'
+    right: 'arrowright',
+    confirm: 'i',
+    cancel: 'o'
   }
 );
 
 const clock = new THREE.Clock();
 
 let splitScreen = null;
+let npcManager = null;
 let gameStarted = false;
 
 /* ==============================
@@ -178,6 +186,7 @@ const pronouns1Select = document.getElementById('goon1-pronouns');
 const pronouns2Select = document.getElementById('goon2-pronouns');
 
 const errorMessage = document.getElementById('customization-error');
+
 
 /* ==============================
    ABRIR PERSONALIZACIÓN
@@ -293,6 +302,20 @@ async function startGame(solo = false) {
     console.log('Goon settings:', goonSettings);
 
     customizationScreen.classList.add('screen-hidden');
+    
+    npcManager = new NPCManager({
+      renderer,
+      splitScreen,
+      players: [player1, player2],
+      playerSettings: goonSettings
+    });
+
+    player1.npcManager = npcManager;
+    player2.npcManager = npcManager;
+
+    const npcSpawner = new NPCSpawner(npcManager);
+
+    await npcSpawner.spawnDay(1);
 
     clock.getDelta();
     gameStarted = true;
@@ -333,8 +356,12 @@ function animate() {
   const deltaTime = Math.min(clock.getDelta(), 0.05);
 
   player1.update(deltaTime);
-  player2.update(deltaTime);
 
+  if (!splitScreen.renderSolo) {
+    player2.update(deltaTime);
+  }
+
+  npcManager?.update();
   splitScreen.render();
 }
 

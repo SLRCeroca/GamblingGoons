@@ -58,38 +58,8 @@ export class IntroSequence {
         {
           speaker: 'CAPO',
           id: 'boss',
-          text: 'Tengo un trabajo para vosotros. Un trabajo importante.'
+          text: 'Prueba'
         },
-        {
-          speaker: 'CAPO',
-          id: 'boss',
-          text: 'Tenéis una cuota semanal que cumplir. No me importa cómo lo consigáis.'
-        },
-        {
-          speaker: 'ROJO',
-          id: 'goon1',
-          text: 'Entendido, jefe. Puedes confiar en nosotros.'
-        },
-        {
-          speaker: 'NEGRO',
-          id: 'goon2',
-          text: 'Sí, sí. ¿Y qué hacemos con el dinero del equipo?'
-        },
-        {
-          speaker: 'CAPO',
-          id: 'boss',
-          text: 'Lo usáis para el trabajo. Y no se os ocurra decepcionarme.'
-        },
-        {
-          speaker: 'ROJO',
-          id: 'goon1',
-          text: 'Claro que no, jefe...'
-        },
-        {
-          speaker: 'NEGRO',
-          id: 'goon2',
-          text: 'Entonces... ¿vamos al casino?'
-        }
       ];
 
       for (const line of dialogues) {

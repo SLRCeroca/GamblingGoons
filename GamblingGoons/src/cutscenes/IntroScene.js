@@ -125,7 +125,6 @@ export class IntroScene {
     // Los tres personajes miran hacia el centro.
     this.models.goon1.rotation.y = 0.35;
     this.models.goon2.rotation.y = -0.35;
-    this.models.boss.rotation.y = Math.PI;
 
     this.setSpeaker('boss');
   }
