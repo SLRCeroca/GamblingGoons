@@ -4,6 +4,10 @@ import { createWorld } from './world/World.js';
 import { Player1 } from './players/Player1.js';
 import { SplitScreen } from './camera/SplitScreen.js';
 import { getSecretSkin } from './players/SecretSkins.js';
+import { IntroSequence } from './cutscenes/IntroSequence.js';
+import { NPCManager } from './npcs/NPCManager.js';
+import { NPCSpawner } from './npcs/NPCSpawner.js';
+
 
 /* ==============================
    PRONOMBRES DISPONIBLES
@@ -13,9 +17,8 @@ import { getSecretSkin } from './players/SecretSkins.js';
 const pronounOptions = [
   { value: 'él', label: 'Él/Ellos' },
   { value: 'ella', label: 'Ella/Ellas' },
-  { value: 'elle', label: 'Elle/Elles' },
   { value: 'all in', label: 'All/In' },
-  { value: 'Jackpot', label: 'Jack/Pot' },
+  { value: 'jackpot', label: 'Jack/Pot' },
 ];
 
 /* ==============================
@@ -43,6 +46,8 @@ const splashTexts = [
   "Goku no le gana a la casa.",
   "🤑🤑🤑🤑🤑",
   "GAMBLING GAMBLING! GOONING GOONING!",
+  "Es una pena terrible, a Rojo le cayo un meteorito mientras apostaba en el blackjack.",
+  "Es una pena terrible, a Negro le pillaron robando todas las fichas en el poker."
 ];
 
 const secretSplashTexts = [
@@ -53,6 +58,7 @@ const secretSplashTexts = [
   "Porque no pruebas el nombre: BOSSMAN?",
   "Porque no pruebas el nombre: GAMBLER?",
   "Porque no pruebas el nombre: PLACEHOLDER?",
+  "Algun dia me encontraran muerto en un casino.",
 ];
 
 // Probabilidad de mostrar una pista secreta: 10 %
@@ -135,7 +141,9 @@ const player1 = new Player1(
     forward: 'w',
     backward: 's',
     left: 'a',
-    right: 'd'
+    right: 'd',
+    confirm: 'e',
+    cancel: 'q'
   }
 );
 
@@ -147,13 +155,16 @@ const player2 = new Player1(
     forward: 'arrowup',
     backward: 'arrowdown',
     left: 'arrowleft',
-    right: 'arrowright'
+    right: 'arrowright',
+    confirm: 'i',
+    cancel: 'o'
   }
 );
 
 const clock = new THREE.Clock();
 
 let splitScreen = null;
+let npcManager = null;
 let gameStarted = false;
 
 /* ==============================
@@ -176,6 +187,7 @@ const pronouns2Select = document.getElementById('goon2-pronouns');
 
 const errorMessage = document.getElementById('customization-error');
 
+
 /* ==============================
    ABRIR PERSONALIZACIÓN
 ================================ */
@@ -197,6 +209,35 @@ backButton.addEventListener('click', () => {
 
   errorMessage.textContent = '';
 });
+
+
+
+/* ==============================
+   CINEMÁTICA INICIAL
+================================ */
+
+let introSequence = null;
+
+function beginIntro(solo = false) {
+  if (gameStarted || introSequence) return;
+
+  startGameButton.disabled = true;
+  soloButton.disabled = true;
+
+  startGameButton.textContent = 'CARGANDO CINEMÁTICA...';
+  soloButton.textContent = 'CARGANDO CINEMÁTICA...';
+
+  customizationScreen.classList.add('screen-hidden');
+
+  introSequence = new IntroSequence(renderer, () => {
+    introSequence = null;
+
+    // Tras la cinemática, iniciar el juego normal.
+    startGame(solo);
+  });
+
+  introSequence.run();
+}
 
 /* ==============================
    INICIAR PARTIDA
@@ -253,6 +294,7 @@ async function startGame(solo = false) {
     if (solo) {
       // La cámara 1 ocupa toda la pantalla.
       splitScreen.renderSolo = true;
+      splitScreen.resize();
     } else {
       player2.setCamera(splitScreen.camera2);
     }
@@ -260,6 +302,20 @@ async function startGame(solo = false) {
     console.log('Goon settings:', goonSettings);
 
     customizationScreen.classList.add('screen-hidden');
+    
+    npcManager = new NPCManager({
+      renderer,
+      splitScreen,
+      players: [player1, player2],
+      playerSettings: goonSettings
+    });
+
+    player1.npcManager = npcManager;
+    player2.npcManager = npcManager;
+
+    const npcSpawner = new NPCSpawner(npcManager);
+
+    await npcSpawner.spawnDay(1);
 
     clock.getDelta();
     gameStarted = true;
@@ -281,11 +337,11 @@ async function startGame(solo = false) {
 }
 
 startGameButton.addEventListener('click', () => {
-  startGame(false);
+  beginIntro(false);
 });
 
 soloButton.addEventListener('click', () => {
-  startGame(true);
+  beginIntro(true);
 });
 
 /* ==============================
@@ -300,8 +356,12 @@ function animate() {
   const deltaTime = Math.min(clock.getDelta(), 0.05);
 
   player1.update(deltaTime);
-  player2.update(deltaTime);
 
+  if (!splitScreen.renderSolo) {
+    player2.update(deltaTime);
+  }
+
+  npcManager?.update();
   splitScreen.render();
 }
 
