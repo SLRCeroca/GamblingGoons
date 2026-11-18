@@ -13,6 +13,10 @@ export class SplitScreen {
 
         this.cameraOffset = new THREE.Vector3(6, 8, 6);
         this.renderSolo = false;
+        this.cameraOverrides = {
+            1: null,
+            2: null
+        };
 
         // Escenas temporales para diálogos individuales.
         this.dialogueViews = {
@@ -51,6 +55,21 @@ export class SplitScreen {
         this.dialogueViews[playerNumber] = null;
     }
 
+    setCameraOverride(playerNumber, camera) {
+        this.cameraOverrides[playerNumber] = camera;
+
+        if (camera) {
+            const width = this.getViewportWidth(playerNumber);
+            camera.aspect = width / this.height;
+            camera.updateProjectionMatrix();
+        }
+    }
+
+    getActiveCamera(playerNumber) {
+        return this.cameraOverrides[playerNumber] ||
+            (playerNumber === 1 ? this.camera1 : this.camera2);
+    }
+
     resize() {
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -83,6 +102,16 @@ export class SplitScreen {
                 view.resize(viewportWidth, height);
             }
         }
+        //Actualizar también las cámaras de minijuegos si existen.
+        for (const playerNumber of [1, 2]) {
+            const camera = this.cameraOverrides[playerNumber];
+
+            if (!camera) continue;
+
+            const viewportWidth = this.getViewportWidth(playerNumber);
+            camera.aspect = viewportWidth / height;
+            camera.updateProjectionMatrix();
+        }
     }
 
     getViewportWidth(playerNumber) {
@@ -101,22 +130,22 @@ export class SplitScreen {
             ? this.player1
             : this.player2;
 
-        const defaultCamera = playerNumber === 1
-            ? this.camera1
-            : this.camera2;
-
-        const view = this.dialogueViews[playerNumber];
+        const camera = this.getActiveCamera(playerNumber);
+        const usingOverride = !!this.cameraOverrides[playerNumber];
 
         this.renderer.setViewport(x, 0, width, height);
         this.renderer.setScissor(x, 0, width, height);
-
-        // 1. Dibujar el casino como fondo.
         this.renderer.clear(true, true, true);
 
-        this.updateCamera(defaultCamera, player);
-        this.renderer.render(this.scene, defaultCamera);
+        // Solo actualizar automáticamente las cámaras normales.
+        if (!usingOverride) {
+            this.updateCamera(camera, player);
+        }
 
-        // 2. Dibujar los modelos del diálogo por encima del casino.
+        this.renderer.render(this.scene, camera);
+
+        const view = this.dialogueViews[playerNumber];
+
         if (view?.scene && view?.camera) {
             this.renderer.clearDepth();
             this.renderer.render(view.scene, view.camera);
@@ -136,8 +165,13 @@ export class SplitScreen {
             this.renderer.setViewport(0, 0, width, height);
             this.renderer.clear(true, true, true);
 
-            this.updateCamera(this.camera1, this.player1);
-            this.renderer.render(this.scene, this.camera1);
+            const camera = this.getActiveCamera(1);
+
+            if (!this.cameraOverrides[1]) {
+                this.updateCamera(camera, this.player1);
+            }
+
+            this.renderer.render(this.scene, camera);
 
             const view = this.dialogueViews[1];
 

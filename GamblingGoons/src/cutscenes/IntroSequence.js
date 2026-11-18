@@ -1,4 +1,3 @@
-
 import { IntroScene } from './IntroScene.js';
 import { DialogueBox } from '../ui/DialogueBox.js';
 
@@ -58,7 +57,37 @@ export class IntroSequence {
         {
           speaker: 'CAPO',
           id: 'boss',
-          text: 'Prueba'
+          text: 'ESCUCHAD, TONTAINAS! Teneis faena.'
+        },
+        {
+          speaker: 'CAPO',
+          id: 'boss',
+          text: 'Nuestra mafia esta sufriendo perdidas... D. Evil Mafia, nuestra competencia estan ganando terreno con su nuevo casino.'
+        },
+        {
+          speaker: 'CAPO',
+          id: 'boss',
+          text: 'Como Capo dei Capi de D. Good Mafia, os voy a mandar al D. Evil Casino. Os presto un poco de pasta para armas, teneis hasta el domingo para prepararos y atracar al casino.'
+        },
+        {
+          speaker: 'CAPO',
+          id: 'boss',
+          text: 'Quiero ver resultados la semana que viene y mas os vale darme mas dinero del prestado...'
+        },
+        {
+          speaker: 'GOON 1',
+          id: 'goon1',
+          text: '(Que ganas de gastarme el dinero en apostar...)'
+        },
+        {
+          speaker: 'GOON 2',
+          id: 'goon2',
+          text: '(Seguro que el rojo esta pensando en apostar... Yo tambien quiero...)'
+        },
+        {
+          speaker: 'Los Gambling Goons',
+          id: 'GamblingGoons',
+          text: '(GAMBLIIIIIIIIING!!!!!!!!!)'
         },
       ];
 

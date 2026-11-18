@@ -18,6 +18,11 @@ export class NPCManager {
             1: this.createOverlay(1),
             2: this.createOverlay(2)
         };
+
+        this.externalPrompts = {
+            1: null,
+            2: null
+        };
     }
 
     createOverlay(playerNumber) {
@@ -56,6 +61,14 @@ export class NPCManager {
             text: container.querySelector('.npc-dialogue-text'),
             hint: container.querySelector('.npc-dialogue-hint')
         };
+    }
+
+    setExternalPrompt(playerNumber, prompt) {
+        this.externalPrompts[playerNumber] = prompt;
+    }
+
+    clearExternalPrompt(playerNumber) {
+        this.externalPrompts[playerNumber] = null;
     }
 
     addNPC(npc) {
@@ -242,7 +255,10 @@ export class NPCManager {
 
             const npc = this.findNearestNPC(player);
 
+            // Los NPC tienen prioridad sobre las mesas.
             if (npc) {
+                this.clearExternalPrompt(playerNumber);
+
                 overlay.container.style.display = 'block';
                 overlay.speaker.textContent = npc.name;
                 overlay.text.textContent = 'Pulsa para hablar.';
@@ -254,6 +270,18 @@ export class NPCManager {
                 if (player.consumeAction('confirm')) {
                     this.startDialogue(playerNumber, npc);
                 }
+
+                continue;
+            }
+
+            // Si no hay NPC, comprobar si otro sistema solicita el overlay.
+            const externalPrompt = this.externalPrompts[playerNumber];
+
+            if (externalPrompt) {
+                overlay.container.style.display = 'block';
+                overlay.speaker.textContent = externalPrompt.speaker;
+                overlay.text.textContent = externalPrompt.text;
+                overlay.hint.textContent = externalPrompt.hint;
             } else {
                 player.clearActions();
                 overlay.container.style.display = 'none';
@@ -268,5 +296,26 @@ export class NPCManager {
         for (const overlay of Object.values(this.prompts)) {
             overlay.container.remove();
         }
+    }
+
+    showExternalPrompt(playerNumber, speaker, message, hint) {
+        const overlay = this.prompts[playerNumber];
+
+        overlay.container.style.display = 'block';
+        overlay.speaker.textContent = speaker;
+        overlay.text.textContent = message;
+        overlay.hint.textContent = hint;
+    }
+
+    hideExternalPrompt(playerNumber) {
+        const overlay = this.prompts[playerNumber];
+
+        // No ocultar el prompt si el jugador está hablando con un NPC.
+        if (this.sessions[playerNumber]) return;
+
+        overlay.container.style.display = 'none';
+        overlay.speaker.textContent = '';
+        overlay.text.textContent = '';
+        overlay.hint.textContent = '';
     }
 }
