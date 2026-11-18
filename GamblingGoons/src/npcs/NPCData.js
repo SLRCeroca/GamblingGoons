@@ -1,10 +1,26 @@
 export const habitualNPCs = [
     {
+        id: 'Hakari',
+        name: 'Restless Gambler',
+        modelPath: '/models/Personajes/hakari.glb',
+        interactionRadius: 1.5,
+        position: { x: 0, z: -2 },
+        dialogues: [
+            {
+                speaker: 'Restless Gambler',
+                text: "AIN'T NOBODY TAKING MY SPOT"
+            }
+        ]
+    }
+];
+
+export const randomNPCs = [
+     {
         id: 'Goonster',
         name: 'W.D GOONSTER',
-        modelPath: '/models/Personajes/pjBASE.glb',
-        position: { x: 0, z: -2 },
-        interactionRadius: 3,
+        modelPath: '/models/Personajes/gasterfromdeltarune.glb',
+        interactionRadius: 1.5,
+        spawnChance: 0.5,
         dialogues: [
             {
                 speaker: 'W.D GOONSTER',
@@ -16,7 +32,7 @@ export const habitualNPCs = [
             },
             {
                 speaker: 'W.D GOONSTER',
-                text: 'LUCK READINGS NEGATIVE. THIS NEXT ROLL WITHH BE...'
+                text: 'LUCK READINGS NEGATIVE. THIS NEXT ROLL WILL BE...'
             },
             {
                 speaker: 'W.D GOONSTER',
@@ -24,26 +40,7 @@ export const habitualNPCs = [
             },
             {
                 speaker: 'W.D GOONSTER',
-                text: '✋︎ ☹︎⚐︎✞︎☜︎ ☝︎✌︎💣︎👌︎☹︎✋︎☠︎☝︎ ☝︎⚐︎⚐︎☠︎💧︎.'
-            }
-        ]
-    }
-];
-
-export const randomNPCs = [
-    // Añadiremos aquí los NPCs aleatorios.
-    // Cada uno tendrá su propia spawnChance.
-    // Ejemplo: spawnChance: 0.4 significa un 40 % diario.
-    {
-        id: 'Hakari',
-        name: 'Restless Gambler',
-        modelPath: '/models/Personajes/hakari.glb',
-        interactionRadius: 3,
-        spawnChance: 0.5,
-        dialogues: [
-            {
-                speaker: 'Restless Gambler',
-                text: "AIN'T NOBODY TAKING MY SPOT"
+                text: '❄︎☟︎✋︎💧︎ 🕈︎✌︎💧︎ ⚐︎🕆︎☼︎ ☝︎✌︎💣︎👌︎☹︎✋︎☠︎☝︎ ☝︎⚐︎⚐︎☠︎💧︎🖳︎ 👍︎✌︎💧︎✋︎☠︎⚐︎ ☠︎✋︎☝︎☟︎❄︎✏︎✏︎✏︎.'
             }
         ]
     }

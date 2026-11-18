@@ -14,6 +14,7 @@ export class Player1 {
         this.speed = 5;
         this.npcManager = null;
         this.collisionRadius = 0.4;
+        this.staticColliders = [];
 
         // Permite pausar a este jugador sin detener al otro.
         this.movementEnabled = true;
@@ -191,6 +192,40 @@ export class Player1 {
         this.actions.cancel = false;
     }
 
+    addStaticCollider(collider) {
+        this.staticColliders.push(collider);
+    }
+
+    removeStaticCollider(collider) {
+        this.staticColliders = this.staticColliders.filter(
+            item => item !== collider
+        );
+    }
+
+    collidesWithStaticObject(position) {
+        return this.staticColliders.some(collider => {
+            const closestX = THREE.MathUtils.clamp(
+                position.x,
+                collider.minX,
+                collider.maxX
+            );
+
+            const closestZ = THREE.MathUtils.clamp(
+                position.z,
+                collider.minZ,
+                collider.maxZ
+            );
+
+            const dx = position.x - closestX;
+            const dz = position.z - closestZ;
+
+            return (
+                dx * dx + dz * dz <
+                this.collisionRadius * this.collisionRadius
+            );
+        });
+    }
+
     update(deltaTime) {
         if (!this.model || !this.camera) return;
 
@@ -232,14 +267,17 @@ export class Player1 {
             const nextPosition = this.model.position.clone()
                 .add(movement);
 
-            const collides = this.npcManager?.npcs.some(npc => {
+            const collidesWithNPC = this.npcManager?.npcs.some(npc => {
                 return npc.collidesWith(
                     nextPosition,
                     this.collisionRadius
                 );
             });
 
-            if (!collides) {
+            const collidesWithObject =
+                this.collidesWithStaticObject(nextPosition);
+
+            if (!collidesWithNPC && !collidesWithObject) {
                 this.model.position.copy(nextPosition);
             }
 

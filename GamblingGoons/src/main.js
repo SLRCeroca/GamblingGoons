@@ -7,6 +7,7 @@ import { getSecretSkin } from './players/SecretSkins.js';
 import { IntroSequence } from './cutscenes/IntroSequence.js';
 import { NPCManager } from './npcs/NPCManager.js';
 import { NPCSpawner } from './npcs/NPCSpawner.js';
+import { Blackjack } from './minigames/blackjack/Blackjack.js';
 
 
 /* ==============================
@@ -47,7 +48,11 @@ const splashTexts = [
   "🤑🤑🤑🤑🤑",
   "GAMBLING GAMBLING! GOONING GOONING!",
   "Es una pena terrible, a Rojo le cayo un meteorito mientras apostaba en el blackjack.",
-  "Es una pena terrible, a Negro le pillaron robando todas las fichas en el poker."
+  "Es una pena terrible, a Negro le pillaron robando todas las fichas en el poker.",
+  "Vamos! Vas a ver mi apuesta o te vas a retirar? Es hora de decidir! Sueltalo de una vez, D'Arby!",
+  "Go AHEAD! ★Mr. Joestar★!",
+  "★OKE! OPEN ZA GAEMU!★",
+  "Si no puedes descubrir las trampas de una persona, no podrás ver su derrota."
 ];
 
 const secretSplashTexts = [
@@ -165,7 +170,42 @@ const clock = new THREE.Clock();
 
 let splitScreen = null;
 let npcManager = null;
+let blackjack = null;
 let gameStarted = false;
+
+/* ==============================
+   ESTADO GLOBAL DE LA PARTIDA
+================================ */
+
+const gameState = {
+  day: 1,
+  money: 500,
+
+  updateHUD() {
+    document.getElementById('hud-day-value').textContent =
+      this.day;
+
+    document.getElementById('hud-money-value').textContent =
+      `${this.money.toLocaleString('es-ES')}$`;
+  },
+
+  addMoney(amount) {
+    this.money += amount;
+    this.updateHUD();
+  },
+
+  setMoney(amount) {
+    this.money = amount;
+    this.updateHUD();
+  },
+
+  setDay(day) {
+    this.day = day;
+    this.updateHUD();
+  }
+};
+
+gameState.updateHUD();
 
 /* ==============================
    REFERENCIAS DEL MENÚ
@@ -302,7 +342,7 @@ async function startGame(solo = false) {
     console.log('Goon settings:', goonSettings);
 
     customizationScreen.classList.add('screen-hidden');
-    
+
     npcManager = new NPCManager({
       renderer,
       splitScreen,
@@ -316,6 +356,25 @@ async function startGame(solo = false) {
     const npcSpawner = new NPCSpawner(npcManager);
 
     await npcSpawner.spawnDay(1);
+
+    blackjack = new Blackjack({
+      scene,
+      splitScreen,
+      players: [player1, player2],
+      npcManager,
+      gameState
+    });
+
+    await blackjack.load();
+
+    // Inicializar los valores de la partida.
+    gameState.day = 1;
+    gameState.money = 500;
+    gameState.updateHUD();
+
+    // Mostrar la interfaz.
+    document.getElementById('game-hud')
+      .classList.remove('hud-hidden');
 
     clock.getDelta();
     gameStarted = true;
@@ -355,13 +414,20 @@ function animate() {
 
   const deltaTime = Math.min(clock.getDelta(), 0.05);
 
+  // Actualizar movimiento de los jugadores.
   player1.update(deltaTime);
 
   if (!splitScreen.renderSolo) {
     player2.update(deltaTime);
   }
 
+  // Blackjack tiene prioridad al comprobar la interacción.
+  blackjack?.update(deltaTime);
+
+  // Después se actualizan los NPCs.
   npcManager?.update();
+
+  // Renderizar al final, con las cámaras ya actualizadas.
   splitScreen.render();
 }
 
