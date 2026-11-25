@@ -75,7 +75,7 @@ export class BlackjackUI {
 
         const values = document.createElement('p');
         values.className = 'blackjack-card-values';
-        values.textContent = 'VALORES: AS = 1 | 2-10 = SU VALOR | J-Q-K = 10';
+        values.textContent = 'VALORES: AS = 11 | 2-10 = SU VALOR | J-Q-K = 10';
 
         const disclaimer = document.createElement('p');
         disclaimer.className = 'blackjack-disclaimer';

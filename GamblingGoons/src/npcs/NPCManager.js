@@ -63,13 +63,27 @@ export class NPCManager {
         };
     }
 
-    setExternalPrompt(playerNumber, prompt) {
-        this.externalPrompts[playerNumber] = prompt;
+
+    setExternalPrompt(playerNumber, prompt, owner = 'default') {
+        this.externalPrompts[playerNumber] = {
+            ...prompt,
+            owner
+        };
     }
 
-    clearExternalPrompt(playerNumber) {
+    clearExternalPrompt(playerNumber, owner = null) {
+        const currentPrompt = this.externalPrompts[playerNumber];
+
+        if (!currentPrompt) return;
+
+        // Si se indica propietario, solo puede borrar su propio prompt.
+        if (owner !== null && currentPrompt.owner !== owner) {
+            return;
+        }
+
         this.externalPrompts[playerNumber] = null;
     }
+
 
     addNPC(npc) {
         this.npcs.push(npc);

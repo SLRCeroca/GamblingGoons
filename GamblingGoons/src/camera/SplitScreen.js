@@ -11,6 +11,9 @@ export class SplitScreen {
         this.camera1 = this.createCamera();
         this.camera2 = this.createCamera();
 
+        this.camera1.layers.enable(1);
+        this.camera2.layers.enable(1);
+        
         this.cameraOffset = new THREE.Vector3(6, 8, 6);
         this.renderSolo = false;
         this.cameraOverrides = {
