@@ -132,7 +132,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 document.body.appendChild(renderer.domElement);
 
-const scene = createWorld();
+const scene = await createWorld();
 
 /* ==============================
    JUGADORES

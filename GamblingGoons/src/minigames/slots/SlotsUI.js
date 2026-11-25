@@ -1,3 +1,4 @@
+import { UINavigation } from '../../ui/UINavigation.js';
 
 export class SlotsUI {
     constructor({
@@ -35,6 +36,8 @@ export class SlotsUI {
         this.reelElements = [];
 
         this.spinButton = null;
+
+        this.keyboard = null;
     }
 
     create() {
@@ -84,6 +87,12 @@ export class SlotsUI {
         });
 
         document.body.appendChild(this.container);
+
+        this.keyboard = new UINavigation({
+            playerNumber: this.playerNumber,
+            container: this.container,
+            onBack: () => this.onExit()
+        });
     }
 
     createButton(text, callback, className = '') {
@@ -278,6 +287,8 @@ export class SlotsUI {
         );
 
         this.container.appendChild(panel);
+
+        this.keyboard?.refresh();
     }
 
     // Crea una cuadrícula de tres rodillos y tres filas.
@@ -367,6 +378,8 @@ export class SlotsUI {
         );
 
         this.container.appendChild(panel);
+
+        this.keyboard?.refresh();
     }
 
     showResult(result) {
@@ -530,6 +543,8 @@ export class SlotsUI {
         }
 
         this.container.appendChild(panel);
+
+        this.keyboard?.refresh();
     }
 
     startReels() {
@@ -670,6 +685,8 @@ export class SlotsUI {
 
     hide() {
         this.clearReelAnimations();
+        this.keyboard?.destroy();
+        this.keyboard = null;
 
         if (!this.container) return;
 

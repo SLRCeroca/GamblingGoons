@@ -1,3 +1,4 @@
+import { UINavigation } from '../../ui/UINavigation.js';
 
 export class BlackjackUI {
     constructor({
@@ -21,6 +22,7 @@ export class BlackjackUI {
 
         this.selectedBet = 50;
         this.container = null;
+        this.keyboard = null;
     }
 
     create() {
@@ -58,6 +60,12 @@ export class BlackjackUI {
         });
 
         document.body.appendChild(this.container);
+
+        this.keyboard = new UINavigation({
+            playerNumber: this.playerNumber,
+            container: this.container,
+            onBack: () => this.onExit()
+        });
     }
 
     createButton(text, callback, className = '') {
@@ -232,6 +240,8 @@ export class BlackjackUI {
         );
 
         this.container.appendChild(panel);
+
+        this.keyboard?.refresh();
     }
 
     showGame({
@@ -283,6 +293,8 @@ export class BlackjackUI {
         );
 
         this.container.appendChild(panel);
+
+        this.keyboard?.refresh();
     }
 
     showResult({
@@ -311,10 +323,15 @@ export class BlackjackUI {
 
         panel.append(title, scores, exitButton);
         this.container.appendChild(panel);
+
+        this.keyboard?.refresh();
     }
 
     hide() {
         if (!this.container) return;
+
+        this.keyboard?.destroy();
+        this.keyboard = null;
 
         this.container.remove();
         this.container = null;
