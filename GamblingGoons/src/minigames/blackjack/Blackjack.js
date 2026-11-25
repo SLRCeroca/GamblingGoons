@@ -324,25 +324,34 @@ export class Blackjack {
         }
     }
 
+
     showInteractionPrompt(playerNumber) {
         const key = playerNumber === 1 ? 'E' : 'I';
 
-        this.npcManager.setExternalPrompt(playerNumber, {
-            speaker: 'BLACKJACK',
-            text: '¿Te apetece probar suerte?',
-            hint: `${key}: JUGAR`
-        });
+        this.npcManager.setExternalPrompt(
+            playerNumber,
+            {
+                speaker: 'BLACKJACK',
+                text: '¿Te apetece probar suerte?',
+                hint: `${key}: JUGAR`
+            },
+            'blackjack'
+        );
     }
 
     hideInteractionPrompt(playerNumber) {
         if (playerNumber !== undefined) {
-            this.npcManager.clearExternalPrompt(playerNumber);
+            this.npcManager.clearExternalPrompt(
+                playerNumber,
+                'blackjack'
+            );
             return;
         }
 
-        this.npcManager.clearExternalPrompt(1);
-        this.npcManager.clearExternalPrompt(2);
+        this.npcManager.clearExternalPrompt(1, 'blackjack');
+        this.npcManager.clearExternalPrompt(2, 'blackjack');
     }
+
 
     checkInteraction() {
         const activePlayers = this.splitScreen.renderSolo

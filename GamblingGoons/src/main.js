@@ -8,6 +8,7 @@ import { IntroSequence } from './cutscenes/IntroSequence.js';
 import { NPCManager } from './npcs/NPCManager.js';
 import { NPCSpawner } from './npcs/NPCSpawner.js';
 import { Blackjack } from './minigames/blackjack/Blackjack.js';
+import { SlotMachine } from './minigames/slots/SlotMachine.js';
 
 
 /* ==============================
@@ -51,7 +52,6 @@ const splashTexts = [
   "Es una pena terrible, a Negro le pillaron robando todas las fichas en el poker.",
   "Vamos! Vas a ver mi apuesta o te vas a retirar? Es hora de decidir! Sueltalo de una vez, D'Arby!",
   "Go AHEAD! ★Mr. Joestar★!",
-  "★OKE! OPEN ZA GAEMU!★",
   "Si no puedes descubrir las trampas de una persona, no podrás ver su derrota."
 ];
 
@@ -171,6 +171,7 @@ const clock = new THREE.Clock();
 let splitScreen = null;
 let npcManager = null;
 let blackjack = null;
+let slotMachine = null;
 let gameStarted = false;
 
 /* ==============================
@@ -367,6 +368,30 @@ async function startGame(solo = false) {
 
     await blackjack.load();
 
+    slotMachine = new SlotMachine({
+      scene,
+      splitScreen,
+      players: [player1, player2],
+      npcManager,
+      gameState,
+
+      position: new THREE.Vector3(0, -0.5, 4),
+      rotation: 0,
+      scale: 0.05,
+
+      interactionWidth: 1.5,
+      interactionDepth: 1.2,
+
+      debugHitbox: true,
+
+      cameraDistance: 1.7,
+      cameraHeightOffset: 0.15,
+      cameraHorizontalOffset: 0,
+      cameraVerticalOffset: 0,
+    });
+
+    await slotMachine.load();
+
     // Inicializar los valores de la partida.
     gameState.day = 1;
     gameState.money = 500;
@@ -421,8 +446,9 @@ function animate() {
     player2.update(deltaTime);
   }
 
-  // Blackjack tiene prioridad al comprobar la interacción.
+  // Los juegos tiene prioridad al comprobar la interacción.
   blackjack?.update(deltaTime);
+  slotMachine?.update(deltaTime);
 
   // Después se actualizan los NPCs.
   npcManager?.update();
